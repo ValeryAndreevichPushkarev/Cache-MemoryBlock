@@ -15,7 +15,7 @@ formatStr = '{:0'+str(base_bitness)+'b}'
 header = """module address_decode_"""+str(addr_bitness)+"_"+str(base_bitness)+"""
 ("""
 header = header +"""\r\ninput wire["""+ str(addr_bitness-1)+""":0] addr_raw,"""
-
+header = header +"""\r\ninput wire selector_enabled,"""
 header = header + """\r\noutput wire["""+ str(output_lines-1)+""":0] addr_selector\r\n"""
 
 header = header + """);\r\n\r\n"""
@@ -41,8 +41,12 @@ for j in reversed(range(output_lines)):
 			header =header + "&"
 		else:
 			if (j!=0):
-				header = header + ",\r\n"
+				header = header + "&selector_enabled,\r\n"
 			else:
-				header = header + "};\r\n\r\n"
+				header = header + "&selector_enabled};\r\n\r\n"
 
 header = header + "\r\nendmodule\r\n"
+
+# Write the file out again
+with open('output.txt', 'w') as file:
+	file.write(header)
