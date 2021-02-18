@@ -42,7 +42,7 @@ for j in reversed(range(output_lines)):
 		else:
 			if (j!=0):
 				header = header + ",\r\n"
-			else
+			else:
 				header = header + "};\r\n\r\n"
 
 header = header + "\r\nendmodule\r\n"
