@@ -1,8 +1,8 @@
 import math
 #address bitness (memory addr size = 2^(addr_bitness*2))
-addr_bitness = 6
+addr_bitness = 4
 #base bitness
-base_bitness = 3
+base_bitness = 2
 
 #data bitness in custom memory module
 data_bitness = 16
@@ -31,7 +31,7 @@ assign r_"""+str(i)+"""_addr["""+str(j)+"""] = (addr_raw["""+str(base_bitness*(i
 
 header = header + "\r\n\r\n"
 #decode address
-header = header + "addr_selector = {"
+header = header + "assign addr_selector = {"
 
 for j in reversed(range(output_lines)):
 	for i in reversed(range(count)):
@@ -49,11 +49,12 @@ for j in reversed(range(output_lines)):
 				header = header + "&selector_enabled};\r\n\r\n"
 
 header = header + "\r\nendmodule\r\n"
+with open('output.txt', 'w') as file:
+	file.write(header)
 
-
+header = ""
 # write memory block with specified selectors
 header = header + """module memory_"""+str(addr_bitness)+"""
-
 ("""
 header = header + """input wire clk,\r\n"""
 header = header + """input wire write_en,\r\n"""
@@ -76,7 +77,7 @@ begin
 for i in range(output_lines):
 	for j in range(output_lines):
 		header = header + """
-	if (addr_selector["""+str(i)+"]&addr_selector["+str(j)+"""])
+	if (addr_selector_1["""+str(i)+"]&addr_selector_2["+str(j)+"""])
 		data_out <= r_"""+str(i)+"_"+str(j)+""";
 		if (write_en==1'b1)
 			r_"""+str(i)+"_"+str(j)+""" <= data_in;"""
@@ -84,5 +85,5 @@ for i in range(output_lines):
 header = header + """\r\nend\r\n"""
 header = header + "\r\nendmodule\r\n"
 # Write the file out again
-with open('output.txt', 'w') as file:
+with open('output.txt', 'a') as file:
 	file.write(header)
