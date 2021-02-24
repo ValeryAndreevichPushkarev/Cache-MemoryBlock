@@ -78,9 +78,12 @@ for i in range(output_lines):
 	for j in range(output_lines):
 		header = header + """
 	if (addr_selector_1["""+str(i)+"]&addr_selector_2["+str(j)+"""])
+	begin
 		data_out <= r_"""+str(i)+"_"+str(j)+""";
 		if (write_en==1'b1)
-			r_"""+str(i)+"_"+str(j)+""" <= data_in;"""
+			r_"""+str(i)+"_"+str(j)+""" <= data_in;
+	end"""
+
 
 header = header + """\r\nend\r\n"""
 header = header + "\r\nendmodule\r\n"
