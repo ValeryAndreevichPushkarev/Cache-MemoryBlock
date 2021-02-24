@@ -28,7 +28,7 @@ assign r_"""+str(i)+"""_addr["""+str(j)+"""] = (addr_raw["""+str(base_bitness*(i
 
 header = header + "\r\n\r\n"
 #decode address
-header = header + "addr_selector = {"
+header = header + "assign addr_selector = {"
 
 for j in reversed(range(output_lines)):
 	for i in reversed(range(count)):
