@@ -5,4 +5,4 @@ it takes only **two transistor swithes delay**(for 12 bit row/column selection),
 
 Its allows to create DRAM arrays with 2-4 Ghz freq and dramatically small timings.
 
-**TODO:** Add script to generate 1 kb/1mb/1gb modules
+**TODO:** Fix block address decoder
