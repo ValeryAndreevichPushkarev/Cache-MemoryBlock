@@ -5,8 +5,8 @@ addr_bitness = 4
 base_bitness = 2
 
 #blocks count
-blocks_count = 8
-blocks_base_bitness = 2
+blocks_count = 16
+blocks_base_bitness = 4
 blocks_bitness = int(math.log(blocks_count, 2))
 
 #data bitness in custom memory module
@@ -92,6 +92,7 @@ for i in range(output_lines):
 header = header + """\r\nend\r\n"""
 header = header + "\r\nendmodule\r\n"
 
+block_address_count = blocks_bitness/ blocks_base_bitness;
 #write decoder for block address
 header = header+ """module block_address_decode_"""+str(blocks_bitness)+"""
 ("""
@@ -99,23 +100,23 @@ header = header +"""\r\ninput wire["""+ str(blocks_bitness-1)+""":0] addr_raw,""
 header = header + """\r\noutput wire["""+ str(blocks_count-1)+""":0] addr_selector\r\n"""
 
 header = header + """);\r\n\r\n"""
-for i in range(blocks_bitness/blocks_base_bitness):
+for i in range(block_address_count):
 	header = header + "wire["+str(2**blocks_base_bitness)+":0] r_"+str(i)+"_addr;\r\n"
-for i in range(blocks_bitness/blocks_base_bitness):
-	for j in range(2**blocks_bitness):
+for i in range(block_address_count):
+	for j in range(2**blocks_base_bitness):
 			header = header + """
-assign r_"""+str(i)+"""_addr["""+str(j)+"""] = (addr_raw["""+str(blocks_bitness*(i+1)-1)+""":"""+str(blocks_bitness*i)+"""]=="""+str(blocks_bitness)+"""'b"""+formatStr.format(j)+""") ?1'b1:1'b0;"""
+assign r_"""+str(i)+"""_addr["""+str(j)+"""] = (addr_raw["""+str(blocks_base_bitness*(i+1)-1)+""":"""+str(blocks_base_bitness*i)+"""]=="""+str(blocks_base_bitness)+"""'b"""+formatStr.format(j)+""") ?1'b1:1'b0;"""
 
 header = header + "\r\n\r\n"
 #decode address
 header = header + "assign addr_selector = {"
 
 for j in reversed(range(blocks_count)):
-	for i in reversed(range(blocks_bitness/blocks_base_bitness)):
+	for i in reversed(range(block_address_count)):
 		addr = j
 		for l in range(i):
-			addr = addr/(2**blocks_bitness)
-		addr = addr % (2**blocks_bitness)
+			addr = addr/(2**blocks_base_bitness)
+		addr = addr % (2**blocks_base_bitness)
 		header = header + "r_"+str(i)+"_addr["+str(addr)+"]"
 		if (i!=0):
 			header =header + "&"
@@ -125,7 +126,7 @@ for j in reversed(range(blocks_count)):
 			else:
 				header = header + "};\r\n\r\n"
 
-header = header + "\r\nendmodule\r\n\r\n"
+header = header + "\r\nendmodule\r\n"
 
 # write memory block with specified selectors
 header = header + """module memory_bulk_"""+str(addr_bitness)+"""
