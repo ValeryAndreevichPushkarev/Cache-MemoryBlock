@@ -1843,3 +1843,76 @@ begin
 end
 
 endmodule
+module block_address_decode_2
+(
+input wire[1:0] addr_raw,
+output wire[3:0] addr_selector
+);
+
+wire[4:0] r_0_addr;
+
+assign r_0_addr[0] = (addr_raw[1:0]==2'b00) ?1'b1:1'b0;
+assign r_0_addr[1] = (addr_raw[1:0]==2'b01) ?1'b1:1'b0;
+assign r_0_addr[2] = (addr_raw[1:0]==2'b10) ?1'b1:1'b0;
+assign r_0_addr[3] = (addr_raw[1:0]==2'b11) ?1'b1:1'b0;
+
+assign addr_selector = {r_0_addr[3],
+r_0_addr[2],
+r_0_addr[1],
+r_0_addr[0]};
+
+
+endmodule
+
+module memory_bulk_4
+(input wire clk,
+input wire write_en,
+input wire[9:0] addr_selector,
+input wire[15:0] data_in,
+output wire[15:0] data_out
+
+);
+wire[1:0] block_addr = addr_selector[9:7];
+wire[3:0] addr_1 = addr_selector[7:4];
+wire[3:0] addr_2 = addr_selector[3:0];
+
+wire[3:0] block_addr_sel;
+wire[15:0] addr_sel_1_0;
+wire[15:0] addr_sel_1_1;
+wire[15:0] addr_sel_1_2;
+wire[15:0] addr_sel_1_3;
+wire[15:0] addr_sel_2;
+
+block_address_decode_2 block_addr_decode(block_addr, block_addr_sel);
+address_decode_4_2  column_addr_decode   (addr_2,1'b1,addr_sel_2);
+
+address_decode_4_2  decod_0 (addr_1,block_addr_sel[0],addr_sel_1_0);
+address_decode_4_2  decod_1 (addr_1,block_addr_sel[1],addr_sel_1_1);
+address_decode_4_2  decod_2 (addr_1,block_addr_sel[2],addr_sel_1_2);
+address_decode_4_2  decod_3 (addr_1,block_addr_sel[3],addr_sel_1_3);
+wire[15:0] data_out_0;
+wire[15:0] data_out_1;
+wire[15:0] data_out_2;
+wire[15:0] data_out_3;
+memory_4 mem_0 (clk, write_en,addr_sel_1_0,addr_sel_2, data_in, data_out_0);
+memory_4 mem_1 (clk, write_en,addr_sel_1_1,addr_sel_2, data_in, data_out_1);
+memory_4 mem_2 (clk, write_en,addr_sel_1_2,addr_sel_2, data_in, data_out_2);
+memory_4 mem_3 (clk, write_en,addr_sel_1_3,addr_sel_2, data_in, data_out_3);
+assign data_out = {data_out_0[0]|data_out_1[0]|data_out_2[0]|data_out_3[0],
+data_out_0[1]|data_out_1[1]|data_out_2[1]|data_out_3[1],
+data_out_0[2]|data_out_1[2]|data_out_2[2]|data_out_3[2],
+data_out_0[3]|data_out_1[3]|data_out_2[3]|data_out_3[3],
+data_out_0[4]|data_out_1[4]|data_out_2[4]|data_out_3[4],
+data_out_0[5]|data_out_1[5]|data_out_2[5]|data_out_3[5],
+data_out_0[6]|data_out_1[6]|data_out_2[6]|data_out_3[6],
+data_out_0[7]|data_out_1[7]|data_out_2[7]|data_out_3[7],
+data_out_0[8]|data_out_1[8]|data_out_2[8]|data_out_3[8],
+data_out_0[9]|data_out_1[9]|data_out_2[9]|data_out_3[9],
+data_out_0[10]|data_out_1[10]|data_out_2[10]|data_out_3[10],
+data_out_0[11]|data_out_1[11]|data_out_2[11]|data_out_3[11],
+data_out_0[12]|data_out_1[12]|data_out_2[12]|data_out_3[12],
+data_out_0[13]|data_out_1[13]|data_out_2[13]|data_out_3[13],
+data_out_0[14]|data_out_1[14]|data_out_2[14]|data_out_3[14],
+data_out_0[15]|data_out_1[15]|data_out_2[15]|data_out_3[15]};
+
+endmodule
