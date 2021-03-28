@@ -7,4 +7,4 @@ Totally it has about 2176 transistors.
 Synthesis result - 0,3 ns (150 nm (osu150)) for 8 bit selector (for 10-12 bit about 0,4).
 
 **TODO:** Make balanced tree version.
-Read about SSD, DDR.
+Read about SSD, DDR, HBM.
