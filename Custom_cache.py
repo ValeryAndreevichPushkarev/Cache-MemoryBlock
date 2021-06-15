@@ -1,11 +1,11 @@
 import math
 #address bitness (memory addr size = 2^(addr_bitness*2))
-addr_bitness = 4
+addr_bitness = 12
 #base bitness
-base_bitness = 2
+base_bitness = 4
 
 #blocks count
-blocks_count = 16
+blocks_count = 256
 blocks_base_bitness = 4
 blocks_bitness = int(math.log(blocks_count, 2))
 
@@ -41,9 +41,13 @@ header = header + "assign addr_selector = {"
 for j in reversed(range(output_lines)):
 	for i in reversed(range(count)):
 		addr = j
+
 		for l in range(i):
 			addr = addr/(2**base_bitness)
-		addr = addr % (2**base_bitness)
+
+		addr = int(addr % (2**base_bitness))
+
+
 		header = header + "r_"+str(i)+"_addr["+str(addr)+"]"
 		if (i!=0):
 			header =header + "&"
@@ -74,7 +78,9 @@ header = header + """output reg["""+ str(data_bitness-1)+""":0] data_out\r\n
 for i in range(output_lines):
 	for j in range(output_lines):
 		header = header + "reg["+str(data_bitness-1)+":0] r_"+str(i)+"_"+str(j)+";\r\n"
-
+	with open('output.txt', 'a') as file:
+		file.write(header)
+	header = ""
 #write registers access
 header = header + """always@(posedge clk)
 begin
@@ -88,11 +94,17 @@ for i in range(output_lines):
 		if (write_en==1'b1)
 			r_"""+str(i)+"_"+str(j)+""" <= data_in;
 	end"""
+	with open('output.txt', 'a') as file:
+		file.write(header)
+	header = ""
 
 header = header + """\r\nend\r\n"""
 header = header + "\r\nendmodule\r\n"
+with open('output.txt', 'a') as file:
+	file.write(header)
+header = ""
 
-block_address_count = blocks_bitness/ blocks_base_bitness;
+block_address_count = int( blocks_bitness/ blocks_base_bitness);
 #write decoder for block address
 header = header+ """module block_address_decode_"""+str(blocks_bitness)+"""
 ("""
@@ -106,7 +118,9 @@ for i in range(block_address_count):
 	for j in range(2**blocks_base_bitness):
 			header = header + """
 assign r_"""+str(i)+"""_addr["""+str(j)+"""] = (addr_raw["""+str(blocks_base_bitness*(i+1)-1)+""":"""+str(blocks_base_bitness*i)+"""]=="""+str(blocks_base_bitness)+"""'b"""+formatStr.format(j)+""") ?1'b1:1'b0;"""
-
+			with open('output.txt', 'a') as file:
+				file.write(header)
+				header = ""
 header = header + "\r\n\r\n"
 #decode address
 header = header + "assign addr_selector = {"
@@ -116,7 +130,7 @@ for j in reversed(range(blocks_count)):
 		addr = j
 		for l in range(i):
 			addr = addr/(2**blocks_base_bitness)
-		addr = addr % (2**blocks_base_bitness)
+		addr = int(addr % (2**blocks_base_bitness))
 		header = header + "r_"+str(i)+"_addr["+str(addr)+"]"
 		if (i!=0):
 			header =header + "&"
@@ -125,8 +139,14 @@ for j in reversed(range(blocks_count)):
 				header = header + ",\r\n"
 			else:
 				header = header + "};\r\n\r\n"
+	with open('output.txt', 'a') as file:
+		file.write(header)
+	header = ""
 
 header = header + "\r\nendmodule\r\n"
+with open('output.txt', 'a') as file:
+	file.write(header)
+header = ""
 
 # write memory block with specified selectors
 header = header + """module memory_bulk_"""+str(addr_bitness)+"""
@@ -168,7 +188,9 @@ for j in range(blocks_count):
 
 for i in range(blocks_count):
 	header = header + "memory_"""+str(addr_bitness)+""" mem_"""+str(i)+" (clk, write_en,addr_sel_1_"+str(i)+",addr_sel_2, data_in, data_out_"+str(i)+");\r\n"
-
+with open('output.txt', 'a') as file:
+	file.write(header)
+header = ""
 #form output register
 header = header + "assign data_out = {"
 for i in range(data_bitness):
@@ -179,6 +201,9 @@ for i in range(data_bitness):
 		else:
 			if (j!=blocks_count-1):
 				header = header + "|"
+		with open('output.txt', 'a') as file:
+			file.write(header)
+		header = ""
 
 header = header + "};\r\n"
 header = header + "\r\nendmodule\r\n"
