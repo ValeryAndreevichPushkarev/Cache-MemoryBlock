@@ -35,7 +35,7 @@ for j in reversed(range(output_lines)):
 		addr = j
 		for l in range(i):
 			addr = addr/(2**base_bitness)
-		addr = addr % (2**base_bitness)
+		addr = int(addr % (2**base_bitness))
 		header = header + "r_"+str(i)+"_addr["+str(addr)+"]"
 		if (i!=0):
 			header =header + "&"
