@@ -8,4 +8,4 @@ For **150nm** (osu150) selector delay is about **0,3 ns**.
 
 **TODO:** Make balanced tree version.
 Read about SSD, DDR, HBM.
-Add more int to repository script.
+Add more int to script in repository.
