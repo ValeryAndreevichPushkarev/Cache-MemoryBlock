@@ -7,6 +7,11 @@ Totally it has about 2176 transistors.
 For **180nm** (osu018) selector delay is about **0,3 ns**. 
 
 **TODO:** Make balanced tree version.
+
 Read about SSD, DDR, HBM.
+
 Make InMemoryComputing ) (with reading 8 bit values from eeprom or so).
+
+Calculate metrics with respect to FO4-FO(N).
+
 Add more int to script in repository.
