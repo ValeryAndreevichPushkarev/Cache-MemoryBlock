@@ -8,6 +8,8 @@ That's allows us to get 64 bit selector that works on 1 Ghz or more. (because of
 For 4 Gb modules its about 512 ps.
 
 
+Current python version works different.
+
 it takes only **two transistor swithes delay**(for 12 bit row/column selection), and about **14 transistors switches** for 12 bit address decode.
 Totally it has about 2176 transistors.
 
