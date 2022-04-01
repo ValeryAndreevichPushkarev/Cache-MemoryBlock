@@ -15,6 +15,8 @@ For **180nm** (osu018) selector delay is about **0,3 ns**.
 
 **TODO:** Make balanced tree version.
 
+Make selectors thats decrease last N bits of address.
+
 Read about SSD, DDR, HBM.
 
 Make InMemoryComputing ) (with reading 8 bit values from eeprom or so).
