@@ -23,6 +23,4 @@ Read about SSD, DDR, HBM.
 
 Make InMemoryComputing ) (with reading 8 bit values from eeprom or so).
 
-Calculate metrics with respect to FO4-FO(N).
-
 Add more int to script in repository.
