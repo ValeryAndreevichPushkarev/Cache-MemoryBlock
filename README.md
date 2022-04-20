@@ -1,7 +1,7 @@
 # Cache-MemoryBlock
 Contains script to generate memory block/cache based on positional encoding
 
-First of all, those selectors takes only **8 transistors"** per row for any bitness.
+First of all, those selectors takes only **8 transistors** per row for any bitness.
 
 Total count of transistor is **2x8x2^Selector_bitness**, that less than modern DRAM modules has.
 
